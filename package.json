@@ -1,0 +1,18 @@
+{
+  "name": "splitjs",
+  "version": "0.0.1",
+  "description": "A Javascript A/B test library",
+  "main": "index.js",
+  "engines": {
+    "node": "8"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ufuk Kayserilioglu <ufuk@paralaus.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "redis": "^2.8.0"
+  }
+}
