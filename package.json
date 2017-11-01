@@ -9,7 +9,7 @@
   "scripts": {
     "test": "jest --coverage",
     "build": "babel src --out-dir lib",
-    "prepublish": "npm run build"
+    "prepublishOnly": "npm run build"
   },
   "babel": {
     "presets": [
@@ -44,5 +44,11 @@
   "dependencies": {
     "es6-promisify": "^5.0.0",
     "uuid": "^3.1.0"
-  }
+  },
+  "keywords": [
+    "experimentation",
+    "multivariate",
+    "testing",
+    "ab"
+  ]
 }
