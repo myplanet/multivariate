@@ -14,7 +14,7 @@ class Multivariate {
         const experiment = await Experiment.findOrCreate(this.connector, experimentName, ...alternativeNames);
 
         if (this._isVisitorExcluded) {
-            return experiment.control.name;           
+            return experiment.control.name;
         }
 
         const winner = await experiment.winner;
@@ -22,7 +22,7 @@ class Multivariate {
         if (winner) {
             return winner.name;
         }
-        
+
         const alternative = await experiment.randomAlternative(this.config.clientId);
 
         await alternative.incrementParticipation();

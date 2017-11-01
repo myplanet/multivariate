@@ -44,13 +44,13 @@ class Experiment {
     }
 
     get totalParticipants() {
-        return (async () => 
+        return (async () =>
             await this.alternatives.reduce(async (sum, alt) => Promise.resolve(await sum + await alt.participantCount), Promise.resolve(0))
         )();
     }
 
     get totalCompleted() {
-        return (async () => 
+        return (async () =>
             await this.alternatives.reduce(async (sum, alt) => Promise.resolve(await sum + await alt.completedCount), Promise.resolve(0))
         )();
     }
@@ -95,7 +95,7 @@ class Experiment {
             point -= alternative.weight;
             if (point <= 0) {
                 return alternative;
-            }            
+            }
         }
     }
 
@@ -115,7 +115,7 @@ class Experiment {
 
     static async find(connector, name) {
         const data = await connector.load(name);
-        return new Experiment(connector, name, ...data[ALTERNATIVE_NAMES_KEY].split('|')); 
+        return new Experiment(connector, name, ...data[ALTERNATIVE_NAMES_KEY].split('|'));
     }
 
     static async findOrCreate(connector, name, ...alternativeNames) {

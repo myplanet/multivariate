@@ -15,7 +15,7 @@ class Alternative {
         this.connector = connector;
         this.experiment = experiment;
         if (Array.isArray(name)) {
-            [this.name, this.weight] = name 
+            [this.name, this.weight] = name
         } else {
             this.name = name;
             this.weight = 1;
@@ -24,25 +24,25 @@ class Alternative {
     }
 
     get participantCount() {
-        return (async () => 
+        return (async () =>
             parseInt(await this.connector.get(this, PARTICIPANT_COUNT_KEY) || 0)
         )();
     }
 
     set participantCount(count) {
-        (async () => 
+        (async () =>
             await this.connector.set(this, PARTICIPANT_COUNT_KEY, count)
         )();
     }
 
     get completedCount() {
-        return (async () => 
+        return (async () =>
             parseInt(await this.connector.get(this, COMPLETED_COUNT_KEY) || 0)
         )();
     }
 
     set completedCount(count) {
-        (async () => 
+        (async () =>
             await this.connector.set(this, COMPLETED_COUNT_KEY, count)
         )();
     }
@@ -60,9 +60,9 @@ class Alternative {
     }
 
     get conversionRate() {
-        return (async () => 
+        return (async () =>
             await this.participantCount === 0
-            ? 0 
+            ? 0
             : await this.completedCount / await this.participantCount
         )();
     }
@@ -125,7 +125,7 @@ class Alternative {
             return confidenceLevel === null
                 ? 'no change'
                 : isNaN(confidenceLevel)
-                    ? 'N/A' 
+                    ? 'N/A'
                     :confidenceLevel === 0
                         ? 'no confidence'
                         : `${confidenceLevel}% confidence`;

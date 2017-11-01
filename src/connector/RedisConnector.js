@@ -15,8 +15,8 @@ class RedisConnector {
     }
 
     async set(obj, field, value) {
-        return value 
-            ? this.redisClient.hsetAsync(obj.key, field, value) 
+        return value
+            ? this.redisClient.hsetAsync(obj.key, field, value)
             : this.redisClient.hdelAsync(obj.key, field);
     }
 
@@ -32,7 +32,7 @@ class RedisConnector {
                 saveData.push(key, value);
             }
         }
-        return this.redisClient.hmsetAsync(obj.key, saveData);    
+        return this.redisClient.hmsetAsync(obj.key, saveData);
     }
 
     async load(key) {
