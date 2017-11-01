@@ -31,7 +31,7 @@ class Experiment {
     }
 
     set winner(winnerName) {
-        this.connector.set(this, WINNER_NAME_KEY, winnerName);
+        (async () => { await this.connector.set(this, WINNER_NAME_KEY, winnerName) })();
     }
 
     resetWinner() {
