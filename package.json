@@ -2,6 +2,10 @@
   "name": "multivariate",
   "version": "0.0.1",
   "description": "A Javascript multivariate testing library",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paracycle/multivariate.git"
+  },
   "main": "./lib/index.js",
   "engines": {
     "node": "8"
