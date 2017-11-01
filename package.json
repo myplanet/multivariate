@@ -7,12 +7,22 @@
     "node": "8"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage",
+  },
+  "jest": {
+    "testMatch": [
+      "<rootDir>/test/**/*.js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/src/connector",
+      "<rootDir>/node_modules/"
+    ]
   },
   "author": "Ufuk Kayserilioglu <ufuk@paralaus.com>",
   "license": "MIT",
   "devDependencies": {
     "babel": "^6.23.0",
+    "jest": "^21.2.1",
     "redis": "^2.8.0"
   },
   "dependencies": {
