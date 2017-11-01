@@ -2,12 +2,26 @@
   "name": "splitjs",
   "version": "0.0.1",
   "description": "A Javascript A/B test library",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "engines": {
     "node": "8"
   },
   "scripts": {
     "test": "jest --coverage",
+    "build": "babel src --out-dir lib",
+    "prepublish": "npm run build"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "4"
+          }
+        }
+      ]
+    ]
   },
   "jest": {
     "testMatch": [
@@ -21,7 +35,8 @@
   "author": "Ufuk Kayserilioglu <ufuk@paralaus.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
     "jest": "^21.2.1",
     "redis": "^2.8.0"
   },
