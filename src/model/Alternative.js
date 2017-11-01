@@ -23,47 +23,47 @@ class Alternative {
         this.key = `${experiment.name}:${this.name}`
     }
 
-    get participant_count() {
+    get participantCount() {
         return (async () => 
             parseInt(await this.connector.get(this, PARTICIPANT_COUNT_KEY) || 0)
         )();
     }
 
-    set participant_count(count) {
+    set participantCount(count) {
         (async () => 
             await this.connector.set(this, PARTICIPANT_COUNT_KEY, count)
         )();
     }
 
-    get completed_count() {
+    get completedCount() {
         return (async () => 
             parseInt(await this.connector.get(this, COMPLETED_COUNT_KEY) || 0)
         )();
     }
 
-    set completed_count(count) {
+    set completedCount(count) {
         (async () => 
             await this.connector.set(this, COMPLETED_COUNT_KEY, count)
         )();
     }
 
-    async increment_participation() {
+    async incrementParticipation() {
         return this.connector.increment(this, PARTICIPANT_COUNT_KEY);
     }
 
-    async increment_completion() {
+    async incrementCompletion() {
         return this.connector.increment(this, COMPLETED_COUNT_KEY);
     }
 
-    get is_control() {
+    get isControl() {
         return this.experiment.control.name === this.name;
     }
 
-    get conversion_rate() {
+    get conversionRate() {
         return (async () => 
-            await this.participant_count === 0 
+            await this.participantCount === 0
             ? 0 
-            : await this.completed_count / await this.participant_count
+            : await this.completedCount / await this.participantCount
         )();
     }
 
@@ -71,64 +71,64 @@ class Alternative {
         return this.connector.delete(this);
     }
 
-    get z_score() {
+    get zScore() {
         return (async () => {
             const control = this.experiment.control;
 
-            if (this.is_control) {
+            if (this.isControl) {
                 return null;
             }
 
-            const part_count_alternative = await this.participant_count;
-            const part_count_control = await control.participant_count;
+            const partCountAlternative = await this.participantCount;
+            const partCountControl = await control.participantCount;
 
-            if (part_count_alternative === 0 || part_count_control === 0) {
+            if (partCountAlternative === 0 || partCountControl === 0) {
                 return null;
             }
 
-            const conv_rate_alternative = await this.conversion_rate;
-            const conv_rate_control = await control.conversion_rate;
+            const convRateAlternative = await this.conversionRate;
+            const convRateControl = await control.conversion_rate;
 
-            const mean = conv_rate_alternative - conv_rate_control;
-            const variance_of_alternative = conv_rate_alternative * (1 - conv_rate_alternative) / part_count_alternative;
-            const variance_of_control = conv_rate_control * (1 - conv_rate_control) / part_count_control;
+            const mean = convRateAlternative - convRateControl;
+            const varianceOfAlternative = convRateAlternative * (1 - convRateAlternative) / partCountAlternative;
+            const varianceOfControl = convRateControl * (1 - convRateControl) / partCountControl;
 
-            if (variance_of_alternative + variance_of_control === 0) {
+            if (varianceOfAlternative + varianceOfControl === 0) {
                 return null;
             }
 
-            return mean / Math.sqrt(variance_of_alternative + variance_of_control);
+            return mean / Math.sqrt(varianceOfAlternative + varianceOfControl);
         })();
     }
 
-    get confidence_level() {
+    get confidenceLevel() {
         return (async () => {
-            const z = await this.z_score;
+            const z = await this.zScore;
 
             if (z === null) {
                 return NaN;
             }
 
-            const z_abs = Math.abs(z);
+            const zAbs = Math.abs(z);
 
             return Z_SCORE_CONFIDENCE_PERCENT_LEVELS.map(
-                    ([limit, confidence_percent])=> 
-                        (z <= limit) ? confidence_percent : undefined
+                    ([limit, confidencePercent])=>
+                        (z <= limit) ? confidencePercent : undefined
                 ).filter(x => x !== undefined)[0];
         })();
     }
 
-    get confidence_level_string() {
+    get confidenceLevelString() {
         return (async () => {
-            const confidence_level = await this.confidence_level;
+            const confidenceLevel = await this.confidenceLevel;
 
-            return confidence_level === null 
+            return confidenceLevel === null
                 ? 'no change'
-                : isNaN(confidence_level)
+                : isNaN(confidenceLevel)
                     ? 'N/A' 
-                    :confidence_level === 0
+                    :confidenceLevel === 0
                         ? 'no confidence'
-                        : `${confidence_level}% confidence`;
+                        : `${confidenceLevel}% confidence`;
         })();
     }
 }
