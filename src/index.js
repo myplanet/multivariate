@@ -1,7 +1,7 @@
-const Split = require('./Split');
+const Multivariate = require('./Multivariate');
 const RedisConnector = require('./connector/RedisConnector');
 
 module.exports = {
-    Split: Split,
+    Multivariate: Multivariate,
     RedisConnector: RedisConnector
 }

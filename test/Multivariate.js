@@ -1,4 +1,4 @@
-const Split = require('../src/Split');
+const Multivariate = require('../src/Multivariate');
 const InMemoryConnector = require('../src/connector/InMemoryConnector');
 
 const TEST_CLIENT_ID = 'TEST_CLIENT_ID';
@@ -8,7 +8,7 @@ const ALT_1 = 'ALT_1';
 const ALT_2 = 'ALT_2';
 const ALTERNATIVE_NAMES = [CONTROL, ALT_1, ALT_2];
 
-describe('Split', () => {
+describe('Multivariate', () => {
     let connector = null;
 
     beforeEach(() => {
@@ -16,14 +16,14 @@ describe('Split', () => {
     });
 
     it('generates a clientId', async () => {
-        const split = new Split(connector);
+        const split = new Multivariate(connector);
         var alternativeName = await split.participate(EXPERIMENT_NAME, ...ALTERNATIVE_NAMES);
 
         expect(alternativeName).toBeDefined();
     });
 
     it('picks the same alternative for participate and complete', async () => {
-        const split = new Split(connector, {
+        const split = new Multivariate(connector, {
             clientId: TEST_CLIENT_ID
         });
     
@@ -34,7 +34,7 @@ describe('Split', () => {
     });
 
     it('always returns the control for bots', async () => {
-        const split = new Split(connector, {
+        const split = new Multivariate(connector, {
             clientId: TEST_CLIENT_ID,
             userAgent: 'googlebot'
         });
@@ -47,9 +47,9 @@ describe('Split', () => {
     });
 
     it('always returns the control for ignored IP addresses', async () => {
-        Split.IGNORED_IP_ADDRESSES = [ '1.1.1.1' ];
+        Multivariate.IGNORED_IP_ADDRESSES = [ '1.1.1.1' ];
 
-        const split = new Split(connector, {
+        const split = new Multivariate(connector, {
             clientId: TEST_CLIENT_ID,
             ipAddress: '1.1.1.1'
         });
@@ -62,7 +62,7 @@ describe('Split', () => {
     });
 
     it('returns the winner if defined', async () => {
-        const split = new Split(connector, {
+        const split = new Multivariate(connector, {
             clientId: TEST_CLIENT_ID  // generates alternative ALT_1
         });
 

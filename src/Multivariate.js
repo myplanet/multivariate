@@ -3,7 +3,7 @@ const uuid = require('uuid');
 const Experiment = require('./model/Experiment');
 const RedisConnector = require('./connector/RedisConnector');
 
-class Split {
+class Multivariate {
     constructor(connector, config = {}) {
         this.connector = connector;
         this.config = config;
@@ -59,15 +59,15 @@ class Split {
     }
 
     get _isRobot() {
-        return !!(this.config.userAgent && Split.ROBOT_REGEX.test(this.config.userAgent));
+        return !!(this.config.userAgent && Multivariate.ROBOT_REGEX.test(this.config.userAgent));
     }
 
     get _isIgnoredIpAddress() {
-        return !!(this.config.ipAddress && Split.IGNORED_IP_ADDRESSES.indexOf(this.config.ipAddress) !== -1);
+        return !!(this.config.ipAddress && Multivariate.IGNORED_IP_ADDRESSES.indexOf(this.config.ipAddress) !== -1);
     }
 }
 
-Split.IGNORED_IP_ADDRESSES = [];
-Split.ROBOT_REGEX = /$^|trivial|facebook|MetaURI|butterfly|google|amazon|goldfire|sleuth|xenu|msnbot|SiteUptime|Slurp|WordPress|ZIBB|ZyBorg|pingdom|bot|yahoo|slurp|java|fetch|spider|url|crawl|oneriot|abby|commentreader|twiceler/i;
+Multivariate.IGNORED_IP_ADDRESSES = [];
+Multivariate.ROBOT_REGEX = /$^|trivial|facebook|MetaURI|butterfly|google|amazon|goldfire|sleuth|xenu|msnbot|SiteUptime|Slurp|WordPress|ZIBB|ZyBorg|pingdom|bot|yahoo|slurp|java|fetch|spider|url|crawl|oneriot|abby|commentreader|twiceler/i;
 
-module.exports = Split;
+module.exports = Multivariate;

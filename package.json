@@ -1,7 +1,7 @@
 {
-  "name": "splitjs",
+  "name": "multivariate",
   "version": "0.0.1",
-  "description": "A Javascript A/B test library",
+  "description": "A Javascript multivariate testing library",
   "main": "./lib/index.js",
   "engines": {
     "node": "8"
