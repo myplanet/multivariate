@@ -73,7 +73,7 @@ class Experiment {
 
     hash(clientId) {
         const sha1 = crypto.createHash('sha1');
-        const hashInput = [this.salt, ...this.alternativeNames, clientId].join('.');
+        const hashInput = [this.salt, ...this.alternativeNames, JSON.stringify(clientId)].join('.');
         sha1.update(hashInput);
 
         return parseInt(sha1.digest('hex').substr(0, 13), 16);
