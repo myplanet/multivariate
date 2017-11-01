@@ -1,9 +1,7 @@
-const util = require('util');
+const promisify = require('es6-promisify');
 
-const promisifyAll = (obj, ...keys) => {
-    keys.forEach(key => obj[key + 'Async'] = util.promisify(obj[key]));
-    return obj;
-}
+const promisifyAll = (obj, ...keys) =>
+    keys.reduce((obj, key) => (obj[key + 'Async'] = promisify(obj[key], obj), obj), obj);
 
 class RedisConnector {
     constructor(redisClient) {
