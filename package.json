@@ -21,7 +21,8 @@
           }
         }
       ]
-    ]
+    ],
+    "sourceMaps": "inline"
   },
   "jest": {
     "testMatch": [
