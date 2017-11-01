@@ -1,14 +1,19 @@
+const crypto = require('crypto');
+
 const Alternative = require('./Alternative');
 
 const WINNER_NAME_KEY = 'winner_name';
 const EXPERIMENT_START_TIME_KEY = 'experiment_start_time';
 const ALTERNATIVE_NAMES_KEY = 'alternative_names';
 
+const LONG_SCALE = 0xFFFFFFFFFFFFF;
+
 class Experiment {
     constructor(connector, name, ...alternativeNames) {
         this.connector = connector;
         this.name = name;
         this.key = this.name;
+        this._salt = null;
         this.alternatives = alternativeNames.map((alternativeName) =>
             new Alternative(connector, alternativeName, this)
         )
@@ -58,6 +63,22 @@ class Experiment {
         return this.alternatives.map(alt => alt.name);
     }
 
+    get salt() {
+        return this._salt || this.name;
+    }
+
+    set salt(salt) {
+        this._salt = salt;
+    }
+
+    hash(clientId) {
+        const sha1 = crypto.createHash('sha1');
+        const hashInput = [this.salt, ...this.alternativeNames, clientId].join('.');
+        sha1.update(hashInput);
+
+        return parseInt(sha1.digest('hex').substr(0, 13), 16);
+    }
+
     async nextAlternative(clientId) {
         return await this.winner || this.randomAlternative(clientId);
     }
@@ -65,8 +86,10 @@ class Experiment {
     randomAlternative(clientId) {
         const totalWeight = this.totalWeight;
 
-        // @todo use clientId for randomness
-        let point = totalWeight * Math.random();
+        const seed = this.hash(clientId);
+        const zeroToOne = seed / LONG_SCALE;
+
+        let point = totalWeight * zeroToOne;
 
         for (const alternative of this.alternatives) {
             point -= alternative.weight;
