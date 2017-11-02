@@ -6,10 +6,11 @@
     "type": "git",
     "url": "git+https://github.com/paracycle/multivariate.git"
   },
-  "main": "./lib/index.js",
-  "engines": {
-    "node": "8"
-  },
+  "main": "lib/index.js",
+  "files": [
+    "lib",
+    "src"
+  ],
   "scripts": {
     "test": "jest --coverage",
     "build": "babel src --out-dir lib",
