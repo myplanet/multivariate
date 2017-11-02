@@ -13,6 +13,8 @@
   ],
   "scripts": {
     "test": "jest --coverage",
+    "clean": "rm -rf lib",
+    "prebuild": "npm run clean",
     "build": "babel src --out-dir lib",
     "prepublishOnly": "npm run build"
   },
