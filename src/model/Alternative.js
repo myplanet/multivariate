@@ -76,14 +76,14 @@ class Alternative {
             const control = this.experiment.control;
 
             if (this.isControl) {
-                return null;
+                return 0;
             }
 
             const partCountAlternative = await this.participantCount;
             const partCountControl = await control.participantCount;
 
             if (partCountAlternative === 0 || partCountControl === 0) {
-                return null;
+                return 0;
             }
 
             const convRateAlternative = await this.conversionRate;
@@ -94,7 +94,7 @@ class Alternative {
             const varianceOfControl = convRateControl * (1 - convRateControl) / partCountControl;
 
             if (varianceOfAlternative + varianceOfControl === 0) {
-                return null;
+                return 0;
             }
 
             return mean / Math.sqrt(varianceOfAlternative + varianceOfControl);
