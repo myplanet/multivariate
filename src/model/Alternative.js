@@ -87,7 +87,7 @@ class Alternative {
             }
 
             const convRateAlternative = await this.conversionRate;
-            const convRateControl = await control.conversion_rate;
+            const convRateControl = await control.conversionRate;
 
             const mean = convRateAlternative - convRateControl;
             const varianceOfAlternative = convRateAlternative * (1 - convRateAlternative) / partCountAlternative;
