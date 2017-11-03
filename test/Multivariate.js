@@ -26,7 +26,7 @@ describe('Multivariate', () => {
         const split = new Multivariate(connector, {
             clientId: TEST_CLIENT_ID
         });
-    
+
         const alternativeName = await split.participate(EXPERIMENT_NAME, ...ALTERNATIVE_NAMES);
         const alternativeNameCompletion = await split.complete(EXPERIMENT_NAME);
 
@@ -38,10 +38,10 @@ describe('Multivariate', () => {
             clientId: TEST_CLIENT_ID,
             userAgent: 'googlebot'
         });
-    
+
         const alternativeName = await split.participate(EXPERIMENT_NAME, ...ALTERNATIVE_NAMES);
         const alternativeNameCompletion = await split.complete(EXPERIMENT_NAME);
-        
+
         expect(alternativeName).toEqual(CONTROL);
         expect(alternativeNameCompletion).toBeUndefined();
     });
@@ -53,7 +53,7 @@ describe('Multivariate', () => {
             clientId: TEST_CLIENT_ID,
             ipAddress: '1.1.1.1'
         });
-    
+
         const alternativeName = await split.participate(EXPERIMENT_NAME, ...ALTERNATIVE_NAMES);
         const alternativeNameCompletion = await split.complete(EXPERIMENT_NAME);
 
@@ -74,10 +74,36 @@ describe('Multivariate', () => {
         const alternativeName = await split.participate(EXPERIMENT_NAME, ...ALTERNATIVE_NAMES);
         // now mark completion
         const alternativeNameCompletion = await split.complete(EXPERIMENT_NAME);
-        
+
         expect(initialAlternativeName).not.toEqual(ALT_2);
         expect(alternativeName).toEqual(ALT_2);
         expect(alternativeNameCompletion).toBeUndefined();
     });
 
+    it('returns proper statistics', async () => {
+        let split = null;
+
+        for (let i = 0; i < 10000; i++) {
+            split = new Multivariate(connector);
+
+            const alternative = await split.participate(EXPERIMENT_NAME, ...ALTERNATIVE_NAMES);
+
+            // always record conversion for ALT_2 so that it wins
+            // record conversion for other only 10% of the time
+            const conversionCutoff = alternative === ALT_2 ? 1 : 0.1;
+
+            if (Math.random() < conversionCutoff) {
+                await split.complete(EXPERIMENT_NAME);
+            }
+        }
+
+        const statistics = await split.getStatistics(EXPERIMENT_NAME);
+
+        expect(statistics).toHaveLength(3);
+        expect(statistics[0]).toMatchObject({
+            name: ALT_2,
+            conversionRate: 1,
+            confidenceLevel: 99.9
+        });
+    });
 })
