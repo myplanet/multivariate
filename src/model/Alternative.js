@@ -113,7 +113,7 @@ class Alternative {
 
             return Z_SCORE_CONFIDENCE_PERCENT_LEVELS.map(
                     ([limit, confidencePercent])=>
-                        (z <= limit) ? confidencePercent : undefined
+                        (zAbs <= limit) ? confidencePercent : undefined
                 ).filter(x => x !== undefined)[0];
         })();
     }
