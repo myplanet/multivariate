@@ -55,6 +55,22 @@ class Multivariate {
         experiment.winner = winnerName;
     }
 
+    async getStatistics(experimentName) {
+        const experiment = await Experiment.find(this.connector, experimentName);
+
+        const results = await Promise.all(experiment.alternatives.map(async alt => ({
+            name: alt.name,
+            participant: await alt.participantCount,
+            completed: await alt.completedCount,
+            conversionRate: await alt.conversionRate,
+            zScore: await alt.zScore,
+            confidenceLevel: await alt.confidenceLevel,
+            confidenceLevelString: await alt.confidenceLevelString
+        })));
+
+        return results.sort((a, b) => b.zScore - a.zScore);
+    }
+
     get _isVisitorExcluded() {
         return this._isRobot || this._isIgnoredIpAddress;
     }
