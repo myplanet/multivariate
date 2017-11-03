@@ -4,10 +4,11 @@ const Experiment = require('./model/Experiment');
 const RedisConnector = require('./connector/RedisConnector');
 
 class Multivariate {
-    constructor(connector, config = {}) {
+    constructor(connector, { clientId = uuid.v4(), ipAddress = null, userAgent = null } = {}) {
         this.connector = connector;
-        this.config = config;
-        this.config.clientId = this.config.clientId || uuid.v4();
+        this.clientId = clientId;
+        this.userAgent = userAgent;
+        this.ipAddress = ipAddress;
     }
 
     async participate(experimentName, ...alternativeNames) {
@@ -23,7 +24,7 @@ class Multivariate {
             return winner.name;
         }
 
-        const alternative = await experiment.randomAlternative(this.config.clientId);
+        const alternative = await experiment.randomAlternative(this.clientId);
 
         await alternative.incrementParticipation();
 
@@ -42,7 +43,7 @@ class Multivariate {
             return;
         }
 
-        const alternative = experiment.randomAlternative(this.config.clientId);
+        const alternative = experiment.randomAlternative(this.clientId);
 
         await alternative.incrementCompletion();
 
@@ -59,11 +60,11 @@ class Multivariate {
     }
 
     get _isRobot() {
-        return !!(this.config.userAgent && Multivariate.ROBOT_REGEX.test(this.config.userAgent));
+        return !!(this.userAgent && Multivariate.ROBOT_REGEX.test(this.userAgent));
     }
 
     get _isIgnoredIpAddress() {
-        return !!(this.config.ipAddress && Multivariate.IGNORED_IP_ADDRESSES.indexOf(this.config.ipAddress) !== -1);
+        return !!(this.ipAddress && Multivariate.IGNORED_IP_ADDRESSES.indexOf(this.ipAddress) !== -1);
     }
 }
 
