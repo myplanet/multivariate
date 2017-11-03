@@ -14,7 +14,7 @@ class InMemoryConnector {
     }
 
     async increment(obj, field, amount = 1) {
-        const value = parseInt(await this.get(obj, field), 10);
+        const value = await this.get(obj, field) | 0;
         return await this.set(obj, field, value + amount);
     }
 
