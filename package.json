@@ -1,5 +1,5 @@
 {
-  "name": "multivariate",
+  "name": "@myplanet/multivariate",
   "version": "0.0.6",
   "description": "A Javascript multivariate testing library",
   "repository": {
@@ -45,7 +45,7 @@
       "<rootDir>/node_modules/"
     ]
   },
-  "author": "Ufuk Kayserilioglu <ufuk@paralaus.com>",
+  "author": "Ufuk Kayserilioglu <ufuk.k@myplanet.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0",
