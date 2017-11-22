@@ -1,3 +1,5 @@
+const Connector = require('../connector/Connector');
+
 const Z_SCORE_CONFIDENCE_PERCENT_LEVELS = [
     [0,                        null],
     [1.64,                     0   ],
@@ -25,34 +27,34 @@ class Alternative {
 
     get participantCount() {
         return (async () =>
-            parseInt(await this.connector.get(this, PARTICIPANT_COUNT_KEY) || 0)
+            parseInt(await this.connector.get(Connector.TYPE_ALTERNATIVE, this.key, PARTICIPANT_COUNT_KEY) || 0)
         )();
     }
 
     set participantCount(count) {
         (async () =>
-            await this.connector.set(this, PARTICIPANT_COUNT_KEY, count)
+            await this.connector.set(Connector.TYPE_ALTERNATIVE, this.key, PARTICIPANT_COUNT_KEY, count)
         )();
     }
 
     get completedCount() {
         return (async () =>
-            parseInt(await this.connector.get(this, COMPLETED_COUNT_KEY) || 0)
+            parseInt(await this.connector.get(Connector.TYPE_ALTERNATIVE, this.key, COMPLETED_COUNT_KEY) || 0)
         )();
     }
 
     set completedCount(count) {
         (async () =>
-            await this.connector.set(this, COMPLETED_COUNT_KEY, count)
+            await this.connector.set(Connector.TYPE_ALTERNATIVE, this.key, COMPLETED_COUNT_KEY, count)
         )();
     }
 
     async incrementParticipation() {
-        return this.connector.increment(this, PARTICIPANT_COUNT_KEY);
+        return this.connector.increment(Connector.TYPE_ALTERNATIVE, this.key, PARTICIPANT_COUNT_KEY);
     }
 
     async incrementCompletion() {
-        return this.connector.increment(this, COMPLETED_COUNT_KEY);
+        return this.connector.increment(Connector.TYPE_ALTERNATIVE, this.key, COMPLETED_COUNT_KEY);
     }
 
     get isControl() {
@@ -68,7 +70,7 @@ class Alternative {
     }
 
     async delete() {
-        return this.connector.delete(this);
+        return this.connector.delete(Connector.TYPE_ALTERNATIVE, this.key);
     }
 
     get zScore() {
