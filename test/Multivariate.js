@@ -105,5 +105,58 @@ describe('Multivariate', () => {
             conversionRate: 1,
             confidenceLevel: 99.9
         });
+
+        const totalCompleted = await split.getTotalCompleted(EXPERIMENT_NAME);
+        const totalParticipants = await split.getTotalParticipants(EXPERIMENT_NAME);
+
+        expect(statistics.reduce((sum, s) => sum += s.completed, 0)).toEqual(totalCompleted);
+        expect(statistics.reduce((sum, s) => sum += s.participant, 0)).toEqual(totalParticipants);
     });
+
+    it('properly cleans up Experiment with reset', async () => {
+        let split = null;
+
+        for (let i = 0; i < 10000; i++) {
+            split = new Multivariate(connector);
+
+            const alternative = await split.participate(EXPERIMENT_NAME, ...ALTERNATIVE_NAMES);
+
+            // always record conversion for ALT_2 so that it wins
+            // record conversion for other only 10% of the time
+            const conversionCutoff = alternative === ALT_2 ? 1 : 0.1;
+
+            if (Math.random() < conversionCutoff) {
+                await split.complete(EXPERIMENT_NAME);
+            }
+        }
+
+        const statistics = await split.getStatistics(EXPERIMENT_NAME);
+
+        expect(statistics).toHaveLength(3);
+        expect(statistics[0]).toMatchObject({
+            name: ALT_2,
+            conversionRate: 1,
+            confidenceLevel: 99.9
+        });
+
+        await split.resetExperiment(EXPERIMENT_NAME);
+
+        // Ensure stats are reset
+        const statsAfterReset = await split.getStatistics(EXPERIMENT_NAME);
+
+        expect(statsAfterReset).toHaveLength(3);
+        expect(statsAfterReset).toMatchObject([{
+            name: CONTROL,
+            conversionRate: 0,
+            confidenceLevel: null
+        }, {
+            name: ALT_1,
+            conversionRate: 0,
+            confidenceLevel: null
+        }, {
+            name: ALT_2,
+            conversionRate: 0,
+            confidenceLevel: null
+        }]);
+    })
 })

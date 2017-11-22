@@ -80,10 +80,6 @@ class Experiment {
         return parseInt(sha1.digest('hex').substr(0, 13), 16);
     }
 
-    async nextAlternative(clientId) {
-        return await this.winner || this.randomAlternative(clientId);
-    }
-
     randomAlternative(clientId) {
         const totalWeight = this.totalWeight;
 

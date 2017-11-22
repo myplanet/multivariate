@@ -71,6 +71,24 @@ class Multivariate {
         return results.sort((a, b) => b.zScore - a.zScore);
     }
 
+    async getTotalCompleted(experimentName) {
+        const experiment = await Experiment.find(this.connector, experimentName);
+
+        return experiment.totalCompleted;
+    }
+
+    async getTotalParticipants(experimentName) {
+        const experiment = await Experiment.find(this.connector, experimentName);
+
+        return experiment.totalParticipants;
+    }
+
+    async resetExperiment(experimentName) {
+        const experiment = await Experiment.find(this.connector, experimentName);
+
+        await experiment.reset();
+    }
+
     get _isVisitorExcluded() {
         return this._isRobot || this._isIgnoredIpAddress;
     }
