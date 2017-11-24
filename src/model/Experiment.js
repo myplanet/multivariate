@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 
 const Alternative = require('./Alternative');
+const Connector = require('../connector/Connector');
 
 const WINNER_NAME_KEY = 'winner_name';
 const EXPERIMENT_START_TIME_KEY = 'experiment_start_time';
@@ -25,13 +26,13 @@ class Experiment {
 
     get winner() {
         return (async () => {
-            const winnerName = await this.connector.get(this, WINNER_NAME_KEY);
+            const winnerName = await this.connector.get(Connector.TYPE_EXPERIMENT, this.key, WINNER_NAME_KEY);
             return winnerName && new Alternative(this.connector, winnerName, this);
         })();
     }
 
     set winner(winnerName) {
-        (async () => { await this.connector.set(this, WINNER_NAME_KEY, winnerName) })();
+        (async () => { await this.connector.set(Connector.TYPE_EXPERIMENT, this.key, WINNER_NAME_KEY, winnerName) })();
     }
 
     resetWinner() {
@@ -39,7 +40,7 @@ class Experiment {
     }
 
     get startTime() {
-        const t = this.connector.get(this, EXPERIMENT_START_TIME_KEY);
+        const t = this.connector.get(Connector.TYPE_EXPERIMENT, this.key, EXPERIMENT_START_TIME_KEY);
         return t && new Date(parseInt(t));
     }
 
@@ -79,10 +80,6 @@ class Experiment {
         return parseInt(sha1.digest('hex').substr(0, 13), 16);
     }
 
-    async nextAlternative(clientId) {
-        return await this.winner || this.randomAlternative(clientId);
-    }
-
     randomAlternative(clientId) {
         const totalWeight = this.totalWeight;
 
@@ -100,7 +97,7 @@ class Experiment {
     }
 
     async save() {
-        this.connector.save(this, {
+        this.connector.save(Connector.TYPE_EXPERIMENT, this.key, {
             [EXPERIMENT_START_TIME_KEY]: new Date().getTime(),
             [ALTERNATIVE_NAMES_KEY]: this.alternativeNames.join('|')
         });
@@ -114,7 +111,7 @@ class Experiment {
     }
 
     static async find(connector, name) {
-        const data = await connector.load(name);
+        const data = await connector.load(Connector.TYPE_EXPERIMENT, name);
         return new Experiment(connector, name, ...data[ALTERNATIVE_NAMES_KEY].split('|'));
     }
 
