@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "test": "jest --coverage",
+    "coveralls": "coveralls < coverage/lcov.info",
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",
     "build": "babel src --out-dir lib",
@@ -52,6 +53,7 @@
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
+    "coveralls": "^3.0.0",
     "jest": "^21.2.1",
     "redis": "^2.8.0"
   },
