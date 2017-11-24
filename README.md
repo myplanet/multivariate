@@ -4,7 +4,7 @@
 
 # multivariate
 
-An multivariate testing (also called A/B testing) backend library with the aim of providing:
+A multivariate testing (also called A/B testing) backend library with the aim of providing:
 
 1. A stable multivarate test selection algorithm
 2. A pluggable persistence connector layer for storing the multivariate test participation and completion events
@@ -57,15 +57,15 @@ The `Multivariate` constructor takes an `options` object that has the following 
 - `userAgent`: You probably don't want to run any experimentation for bots, so you can supply the `userAgent` field to so that `Multivariate` can identify if the client is a bot and doesn't record any participation or conversion data for that client. The regular expression for matching bots is stored in `Multivariate.ROBOT_REGEX` and can be set to something else before calling the constructor.
 - `ipAddress`: In certain cases, you might not want to run any experimentation for clients coming in from certain IP addresses. For example, you might want to exclude your office IP addresses from experimentation so as not to skew results. Supplying the IP address of the client allows the library to match against a list of ignored IP addresses (which is empty by default). The list can be populated by setting `Multivariate.IGNORED_IP_ADDRESSES` to an array of ignored IP address strings before calling the class constructor.
 
-### Multivariate#participate(experimentName, ...alternativeNames)
+### participate(experimentName, ...alternativeNames)
 
 The `participate` method looks up a stored experiment or creates one with the given alternatives, selects a variant for the client, records the selection event and returns a Promise for the selected alternative name. The first supplied alternative is used as the **control** and that alternative is served for clients that do not participate in the experiment. All statistical calculations measure how better (or worse) a given alternative behaves as compared to this control.
 
-### Multivariate#complete(experimentName)
+### complete(experimentName)
 
 The `complete` method looks up a stored experiment (and fails if it can't find one), calculates the variant the client should have been served with, records a convertion event and returns a Promise for the alternative name (which should match the alternative name for participation if the `clientID` parameters are the same).
 
-### Multivariate#getStatistics(experimentName)
+### getStatistics(experimentName)
 
 Returns statistics for the experiment. The return value is an array of statistics for each alternative, sorted in the order of best to worst conversion rate. Each entry includes the following fields:
 
@@ -83,19 +83,19 @@ Returns statistics for the experiment. The return value is an array of statistic
     - `99.9`: 99.9% confidence
 - `confidenceLevelString`: String representation (in English) of the `confidenceLevel` value.
 
-### Multivariate#setWinner(experimentName, alternativeName)
+### setWinner(experimentName, alternativeName)
 
 Once you are satisfied that one of the variants is a winner, you might want the code to return variant that for all participants (until you remove the experiment code from the codebase). In this case, a call to this method with the experiment name and the desired winning alternative name ensures that all further `participate` calls are short-circuited to return the winner and all further `complete` methods become no-ops.
 
-### Multivariate#getTotalParticipants(experimentName)
+### getTotalParticipants(experimentName)
 
 Returns the total number of participations recorded across all alternatives for this experiment.
 
-### Multivariate#getTotalCompleted(experimentName)
+### getTotalCompleted(experimentName)
 
 Returns the total number of conversions recorded across all alternatives for this experiment.
 
-### Multivariate#resetExperiment(experimentName)
+### resetExperiment(experimentName)
 
 Resets an experiment, clearing all records related to it completely.
 
